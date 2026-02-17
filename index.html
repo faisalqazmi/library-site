@@ -4,7 +4,20 @@
   <title>KMCLU Library</title>
 </head>
 <body>
-  <h1>Welcome to KMCLU Library</h1>
-  <p>Search system coming soon.</p>
+  <h1>KMCLU Library Search</h1>
+
+  <input type="text" id="searchBox" placeholder="Search books...">
+  <button onclick="searchBook()">Search</button>
+
+  <p id="result"></p>
+
+  <script>
+    function searchBook() {
+      let query = document.getElementById("searchBox").value;
+      document.getElementById("result").innerHTML =
+        "You searched for: " + query;
+    }
+  </script>
+
 </body>
 </html>
