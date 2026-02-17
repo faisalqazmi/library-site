@@ -109,7 +109,7 @@
 
     notification.style.display = "block";
     notification.className = "notification success";
-    notification.innerText = "Button clicked. Connecting to server...";
+    notification.innerText = "Connecting to server...";
     resultDiv.innerHTML = "";
 
     if (!query) {
@@ -137,7 +137,7 @@
           .join("");
       } else {
         notification.className = "notification error";
-        notification.innerText = "No books found.";
+        notification.innerText = "No book found.";
       }
 
     } catch (error) {
