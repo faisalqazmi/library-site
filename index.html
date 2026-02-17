@@ -12,11 +12,21 @@
   <p id="result"></p>
 
   <script>
-    function searchBook() {
-      let query = document.getElementById("searchBox").value;
-      document.getElementById("result").innerHTML =
-        "You searched for: " + query;
-    }
+async function searchBook() {
+  const query = document.getElementById("searchBox").value.toLowerCase();
+
+  const response = await fetch("https://library-site.onrender.com/books");
+  const books = await response.json();
+
+  const filtered = books.filter(book =>
+    book.title.toLowerCase().includes(query)
+  );
+
+  document.getElementById("result").innerHTML =
+    filtered.length > 0
+      ? filtered.map(book => book.title + " - " + book.author).join("<br>")
+      : "No books found";
+}
   </script>
 
 </body>
