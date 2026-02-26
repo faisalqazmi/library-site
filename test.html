@@ -1,302 +1,368 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>KMCLU Library Portal | Academic Book Search</title>
-
-<link rel="icon" type="image/png" href="/favicon.png">
-
-<meta name="description" content="KMCLU Library Portal - Search academic books across multiple departments.">
-<meta name="keywords" content="KMCLU Library, Academic Book Search, University Library Portal">
-<meta name="author" content="CupX Corporation">
-
-<link rel="canonical" href="https://library.kmclu.cupx.in/">
-
-<meta property="og:title" content="KMCLU Library Portal">
-<meta property="og:description" content="Search academic books across multiple departments.">
-<meta property="og:url" content="https://library.kmclu.cupx.in/">
-<meta property="og:type" content="website">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #0f172a;
-  color: #e5e7eb;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* HEADER (same structure as tools) */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  background-color: #020617;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 22px;
-}
-
-header a {
-  color: #38bdf8;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-header a:hover {
-  text-decoration: underline;
-}
-
-/* MAIN */
-main {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 50px 20px;
-}
-
-.container {
-  background: #020617;
-  width: 95%;
-  max-width: 650px;
-  padding: 40px 30px;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-  text-align: center;
-}
-
-.portal-title {
-  margin: 0;
-  font-size: 24px;
-}
-
-.subtitle {
-  margin: 8px 0 25px;
-  font-size: 14px;
-  color: #94a3b8;
-}
-
-/* SEARCH */
-.search-wrapper {
-  position: relative;
-  width: 100%;
-  margin-bottom: 25px;
-}
-
-.search-wrapper input {
-  width: 100%;
-  height: 54px;
-  border-radius: 28px;
-  border: 2px solid #38bdf8;
-  padding: 0 60px 0 22px;
-  font-size: 15px;
-  outline: none;
-  background: #0f172a;
-  color: #e5e7eb;
-}
-
-.search-icon-btn {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #38bdf8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-weight: bold;
-  color: #020617;
-}
-
-/* BUTTONS */
-.button-row {
-  display: flex;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.button-row button {
-  flex: 1;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  background: #38bdf8;
-  color: #020617;
-}
-
-.button-row button:hover {
-  opacity: 0.9;
-}
-
-/* NOTIFICATION */
-.notification {
-  display: none;
-  padding: 10px;
-  border-radius: 10px;
-  font-size: 14px;
-  margin-bottom: 15px;
-}
-
-.success { background: #38bdf8; color: #020617; }
-.error { background: #b23a48; color: white; }
-
-/* BOOK CARD */
-.book-card {
-  background: #0f172a;
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 10px;
-  border: 1px solid #1e293b;
-  text-align: left;
-}
-
-.book-title { font-weight: 600; }
-.book-author { font-size: 13px; color: #94a3b8; }
-
-/* FOOTER (same as tools) */
-footer {
-  text-align: center;
-  padding: 20px;
-  font-size: 13px;
-  background-color: #020617;
-  opacity: 0.8;
-}
-</style>
-
-</head>
-
-<body>
-
-<header>
-  <h1>CupX Corporation</h1>
-  <a href="https://cupx.in">← Back to Home</a>
-</header>
-
-<main>
-  <div class="container">
-
-    <h2 class="portal-title">KMCLU Library Portal</h2>
-    <div class="subtitle">Search Academic Books</div>
-
-    <div class="search-wrapper">
-      <input type="text" id="searchBox"
-        placeholder="Search by title..."
-        onkeypress="if(event.key==='Enter') searchBook()">
-      <div class="search-icon-btn" onclick="searchBook()">→</div>
-    </div>
-
-    <div class="button-row">
-      <button onclick="exportExcel()">Export Excel</button>
-      <button onclick="exportPDF()">Export PDF</button>
-    </div>
-
-    <div id="notification" class="notification"></div>
-    <div id="results"></div>
-
-  </div>
-</main>
-
-<footer>
-  © 2026 CupX Corporation · All rights reserved
-</footer>
-
-<script>
-let currentResults = [];
-
-async function searchBook() {
-  const query = document.getElementById("searchBox").value.trim().toLowerCase();
-  const notification = document.getElementById("notification");
-  const resultsDiv = document.getElementById("results");
-
-  resultsDiv.innerHTML = "";
-
-  if (!query) {
-    showMessage("Please enter a search term.", "error");
-    return;
-  }
-
-  showMessage("Searching...", "success");
-
-  try {
-    const response = await fetch("https://library-back1.onrender.com/books");
-    const books = await response.json();
-
-    currentResults = books.filter(book =>
-      book.title.toLowerCase().includes(query)
-    );
-
-    if (currentResults.length > 0) {
-      showMessage(currentResults.length + " result(s) found.", "success");
-
-      resultsDiv.innerHTML = currentResults.map(book => `
-        <div class="book-card">
-          <div class="book-title">${book.title}</div>
-          <div class="book-author">Author: ${book.author}</div>
-        </div>
-      `).join("");
-    } else {
-      showMessage("No books found.", "error");
-    }
-
-  } catch (error) {
-    showMessage("Server is waking up. Try again.", "error");
-  }
-}
-
-function showMessage(msg, type) {
-  const n = document.getElementById("notification");
-  n.style.display = "block";
-  n.className = "notification " + type;
-  n.innerText = msg;
-}
-
-function exportExcel() {
-  if (currentResults.length === 0) return alert("No data to export.");
-  let csv = "Title,Author\n";
-  currentResults.forEach(book => {
-    csv += `"${book.title}","${book.author}"\n`;
-  });
-  const blob = new Blob([csv], { type: "text/csv" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "library_results.csv";
-  link.click();
-}
-
-function exportPDF() {
-  if (currentResults.length === 0) return alert("No data to export.");
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  let y = 10;
-  currentResults.forEach(book => {
-    doc.text(book.title, 10, y);
-    y += 7;
-    doc.text("Author: " + book.author, 10, y);
-    y += 10;
-  });
-  doc.save("library_results.pdf");
-}
-</script>
-
-</body>
-</html>
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  
+<title>KMCLU Library Portal | Academic Book Search</title>  
+  
+<meta name="description" content="KMCLU Library Portal - Search academic books across multiple departments. Student project demonstration site.">  
+<meta name="keywords" content="KMCLU Library, KMCLU Books, Academic Book Search, University Library Portal">  
+<meta name="author" content="KMCLU Library Project">  
+  
+<link rel="canonical" href="https://library.kmclu.cupx.in/">  
+  
+<meta property="og:title" content="KMCLU Library Portal">  
+<meta property="og:description" content="Search academic books across multiple departments. Student project demo.">  
+<meta property="og:url" content="https://library.kmclu.cupx.in/">  
+<meta property="og:type" content="website">  
+  
+<meta name="google-site-verification" content="PASTE_YOUR_CODE_HERE" />  
+  
+<script type="application/ld+json">  
+{  
+  "@context": "https://schema.org",  
+  "@type": "WebSite",  
+  "name": "KMCLU Library Portal",  
+  "url": "https://library.kmclu.cupx.in",  
+  "description": "Search academic books across multiple departments. Student project demo site."  
+}  
+</script>  
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>  
+  
+<style>  
+* { box-sizing: border-box; }  
+  
+body {  
+  margin: 0;  
+  font-family: Arial, Helvetica, sans-serif;  
+  background-color: #0f172a;  
+  color: #e5e7eb;  
+  display: flex;  
+  flex-direction: column;  
+  min-height: 100vh;  
+}  
+  
+/* Header (matches cupx.in) */  
+header {  
+  display: flex;  
+  justify-content: space-between;  
+  align-items: center;  
+  padding: 16px 20px;  
+  background-color: #020617;  
+}  
+  
+header h1 {  
+  margin: 0;  
+  font-size: 22px;  
+  color: #e5e7eb;  
+}  
+  
+nav a {  
+  color: #e5e7eb;  
+  text-decoration: none;  
+  margin-left: 15px;  
+  font-size: 14px;  
+}  
+  
+nav a:hover {  
+  color: #38bdf8;  
+}  
+  
+/* Main content */  
+main {  
+  flex: 1;  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  padding: 40px 20px;  
+}  
+  
+.container {  
+  background: #020617;  
+  width: 92%;  
+  max-width: 600px;  
+  padding: 40px 30px;  
+  border-radius: 24px;  
+  box-shadow: 0 25px 50px rgba(0,0,0,0.4);  
+  text-align: center;  
+}  
+  
+.header {  
+  display: flex;  
+  flex-direction: column;  
+  justify-content: center;  
+  align-items: center;  
+  gap: 8px;  
+  margin-bottom: 25px;  
+}  
+  
+.header-row {  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  gap: 10px;  
+}  
+  
+.header svg {  
+  width: 40px;  
+  height: 40px;  
+  fill: #38bdf8;  
+}  
+  
+h1.portal-title {  
+  margin: 0;  
+  font-size: 24px;  
+  color: #e5e7eb;  
+  text-align: center;  
+}  
+  
+.subtitle {  
+  margin: 0;  
+  margin-bottom: 20px;  
+  font-size: 14px;  
+  color: #94a3b8;  
+  text-align: center;  
+}  
+  
+.search-wrapper {  
+  position: relative;  
+  width: 100%;  
+  margin-bottom: 25px;  
+}  
+  
+.search-wrapper input {  
+  width: 100%;  
+  height: 56px;  
+  border-radius: 30px;  
+  border: 2px solid #38bdf8;  
+  padding: 0 60px 0 22px;  
+  font-size: 16px;  
+  outline: none;  
+  background: #0f172a;  
+  color: #e5e7eb;  
+}  
+  
+.search-wrapper input::placeholder {  
+  color: #64748b;  
+}  
+  
+.search-icon-btn {  
+  position: absolute;  
+  right: 8px;  
+  top: 50%;  
+  transform: translateY(-50%);  
+  width: 46px;  
+  height: 46px;  
+  border-radius: 50%;  
+  background: #38bdf8;  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  cursor: pointer;  
+}  
+  
+.search-icon-btn svg {  
+  width: 18px;  
+  height: 18px;  
+  fill: #020617;  
+}  
+  
+.button-row {  
+  display: flex;  
+  gap: 14px;  
+  margin-bottom: 15px;  
+}  
+  
+.button-row button {  
+  flex: 1;  
+  padding: 13px;  
+  border-radius: 14px;  
+  border: none;  
+  font-weight: 600;  
+  font-size: 14px;  
+  cursor: pointer;  
+}  
+  
+.excel-btn { background: #38bdf8; color: #020617; }  
+.pdf-btn { background: #38bdf8; color: #020617; }  
+  
+.excel-btn:hover, .pdf-btn:hover { opacity: 0.9; }  
+  
+.notification {  
+  display: none;  
+  padding: 10px;  
+  border-radius: 10px;  
+  font-size: 14px;  
+  margin-bottom: 15px;  
+}  
+  
+.success { background: #38bdf8; color: #020617; }  
+.error { background: #b23a48; color: white; }  
+  
+.book-card {  
+  background: #0f172a;  
+  border-radius: 14px;  
+  padding: 12px;  
+  margin-bottom: 10px;  
+  border: 2px solid #1e3a5f;  
+  text-align: left;  
+}  
+  
+.book-title { font-weight: 600; color: #e5e7eb; }  
+.book-author { font-size: 13px; color: #94a3b8; }  
+  
+.disclaimer {  
+  margin-top: 20px;  
+  font-size: 12px;  
+  color: #64748b;  
+}  
+  
+/* Footer (matches cupx.in) */  
+footer {  
+  text-align: center;  
+  padding: 20px;  
+  font-size: 13px;  
+  background-color: #020617;  
+  color: #e5e7eb;  
+  opacity: 0.8;  
+}  
+</style>  
+  
+</head>  
+  
+<body>  
+  
+<header>  
+  <h1>CupX</h1>  
+  <nav>  
+    <a href="https://auth.cupx.in">SignIn/Up</a>  
+    <a href="https://cupx.in#tools">Tools</a>  
+    <a href="https://cupx.in/contact.html">Contact</a>  
+    <a href="https://cupx.in#about">About</a>  
+  </nav>  
+</header>  
+  
+<main>  
+  <div class="container">  
+  
+    <div class="header">  
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">  
+        <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>  
+      </svg>  
+      <h1 class="portal-title">KMCLU Library Portal</h1>  
+      <div class="subtitle">Search Academic Books</div>  
+    </div>  
+  
+    <div class="search-wrapper">  
+      <input type="text" id="searchBox"  
+        placeholder="Search by title..."  
+        onkeypress="if(event.key==='Enter') searchBook()">  
+      <div class="search-icon-btn" onclick="searchBook()">  
+        <svg viewBox="0 0 24 24">  
+          <path d="M15.5 14h-.8l-.3-.3A6.471 6.471 0 0016 9.5   
+          6.5 6.5 0 109.5 16a6.471 6.471 0 004.2-1.6l.3.3v.8L20 21.5   
+          21.5 20 15.5 14zM9.5 14A4.5 4.5 0 119.5 5   
+          4.5 4.5 0 019.5 14z"/>  
+        </svg>  
+      </div>  
+    </div>  
+  
+    <div class="button-row">  
+      <button class="excel-btn" onclick="exportExcel()">Export Excel</button>  
+      <button class="pdf-btn" onclick="exportPDF()">Export PDF</button>  
+    </div>  
+  
+    <div id="notification" class="notification"></div>  
+    <div id="results"></div>  
+  
+    <div class="disclaimer">  
+      ⚠ This website is a student project. All book data is fictional and for demonstration only.  
+    </div>  
+  
+  </div>  
+</main>  
+  
+<footer>  
+  © 2026 CupX Corporation · All rights reserved  
+</footer>  
+  
+<script>  
+let currentResults = [];  
+async function searchBook() {  
+  const query = document.getElementById("searchBox").value.trim().toLowerCase();  
+  const notification = document.getElementById("notification");  
+  const resultsDiv = document.getElementById("results");  
+  
+  notification.style.display = "block";  
+  notification.className = "notification success";  
+  notification.innerText = "Searching...";  
+  resultsDiv.innerHTML = "";  
+  
+  if (!query) {  
+    notification.className = "notification error";  
+    notification.innerText = "Please enter a search term.";  
+    return;  
+  }  
+  
+  try {  
+    const response = await fetch("https://library-back1.onrender.com/books");  
+    const books = await response.json();  
+  
+    currentResults = books.filter(book =>  
+      book.title.toLowerCase().includes(query)  
+    );  
+  
+    if (currentResults.length > 0) {  
+      notification.className = "notification success";  
+      notification.innerText = currentResults.length + " result(s) found.";  
+  
+      resultsDiv.innerHTML = currentResults.map(book => `  
+        <div class="book-card">  
+          <div class="book-title">${book.title}</div>  
+          <div class="book-author">Author: ${book.author}</div>  
+        </div>  
+      `).join("");  
+    } else {  
+      notification.className = "notification error";  
+      notification.innerText = "No books found.";  
+    }  
+  
+  } catch (error) {  
+    notification.className = "notification error";  
+    notification.innerText = "Server is waking up. Try again.";  
+  }  
+}  
+  
+function exportExcel() {  
+  if (currentResults.length === 0) return alert("No data to export.");  
+  let csv = "Title,Author\n";  
+  currentResults.forEach(book => {  
+    csv += `"${book.title}","${book.author}"\n`;  
+  });  
+  const blob = new Blob([csv], { type: "text/csv" });  
+  const link = document.createElement("a");  
+  link.href = URL.createObjectURL(blob);  
+  link.download = "library_results.csv";  
+  link.click();  
+}  
+  
+function exportPDF() {  
+  if (currentResults.length === 0) return alert("No data to export.");  
+  const { jsPDF } = window.jspdf;  
+  const doc = new jsPDF();  
+  let y = 10;  
+  currentResults.forEach(book => {  
+    doc.text(book.title, 10, y);  
+    y += 7;  
+    doc.text("Author: " + book.author, 10, y);  
+    y += 10;  
+  });  
+  doc.save("library_results.pdf");  
+}  
+</script>  
+  
+</body>  
+</html>  
