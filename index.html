@@ -8,15 +8,7 @@
 <title>KMCLU Library Portal | Academic Book Search</title>
 
 <meta name="description" content="KMCLU Library Portal - Search academic books across multiple departments.">
-<meta name="keywords" content="KMCLU Library, KMCLU Books, Academic Book Search">
-<meta name="author" content="KMCLU Library Project">
-
 <link rel="canonical" href="https://library.kmclu.cupx.in/">
-
-<meta property="og:title" content="KMCLU Library Portal">
-<meta property="og:description" content="Search academic books across multiple departments.">
-<meta property="og:url" content="https://library.kmclu.cupx.in/">
-<meta property="og:type" content="website">
 
 <!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -46,10 +38,7 @@ header {
   background-color: #020617;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 22px;
-}
+header h1 { margin: 0; font-size: 22px; }
 
 .home-btn {
   color: #38bdf8;
@@ -80,14 +69,16 @@ main {
 }
 
 .header svg {
-  width: 40px;
-  height: 40px;
-  fill: #38bdf8;
+  width: 48px;
+  height: 48px;
+  stroke: #38bdf8;
+  fill: none;
+  stroke-width: 1.8;
 }
 
 .portal-title {
   margin: 10px 0 0 0;
-  font-size: 24px;
+  font-size: 26px;
 }
 
 .subtitle {
@@ -128,9 +119,11 @@ main {
 }
 
 .search-icon-btn svg {
-  width: 18px;
-  height: 18px;
-  fill: #020617;
+  width: 20px;
+  height: 20px;
+  stroke: #020617;
+  fill: none;
+  stroke-width: 2;
 }
 
 .button-row {
@@ -195,11 +188,15 @@ footer {
 <div class="container">
 
 <div class="header">
-  <svg viewBox="0 0 24 24">
-    <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
-  </svg>
-  <h1 class="portal-title">KMCLU Library Portal</h1>
-  <div class="subtitle">Search Academic Books</div>
+
+<!-- Proper Book SVG -->
+<svg viewBox="0 0 24 24">
+  <path d="M3 4h7a3 3 0 013 3v13H6a3 3 0 01-3-3V4z"/>
+  <path d="M21 4h-7a3 3 0 00-3 3v13h7a3 3 0 003-3V4z"/>
+</svg>
+
+<h1 class="portal-title">KMCLU Library Portal</h1>
+<div class="subtitle">Search Academic Books</div>
 </div>
 
 <div class="search-wrapper">
@@ -207,9 +204,13 @@ footer {
     placeholder="Search by title..."
     onkeypress="if(event.key==='Enter') searchBook()">
   <div class="search-icon-btn" onclick="searchBook()">
+
+    <!-- Proper Search SVG -->
     <svg viewBox="0 0 24 24">
-      <path d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 109.5 16a6.5 6.5 0 004.2-1.6l.3.3L20 21.5 21.5 20z"/>
+      <circle cx="11" cy="11" r="7"></circle>
+      <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
     </svg>
+
   </div>
 </div>
 
@@ -271,279 +272,7 @@ async function searchBook() {
   `).join("");
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>KMCLU Library Portal | Academic Book Search</title>
-
-<meta name="description" content="KMCLU Library Portal - Search academic books across multiple departments.">
-<meta name="keywords" content="KMCLU Library, KMCLU Books, Academic Book Search">
-<meta name="author" content="KMCLU Library Project">
-
-<link rel="canonical" href="https://library.kmclu.cupx.in/">
-
-<meta property="og:title" content="KMCLU Library Portal">
-<meta property="og:description" content="Search academic books across multiple departments.">
-<meta property="og:url" content="https://library.kmclu.cupx.in/">
-<meta property="og:type" content="website">
-
-<!-- PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-
-<!-- Excel -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-<style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #0f172a;
-  color: #e5e7eb;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  background-color: #020617;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 22px;
-}
-
-.home-btn {
-  color: #38bdf8;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-main {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
-}
-
-.container {
-  background: #020617;
-  width: 95%;
-  max-width: 700px;
-  padding: 40px 30px;
-  border-radius: 24px;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-  text-align: center;
-}
-
-.header {
-  margin-bottom: 25px;
-}
-
-.header svg {
-  width: 40px;
-  height: 40px;
-  fill: #38bdf8;
-}
-
-.portal-title {
-  margin: 10px 0 0 0;
-  font-size: 24px;
-}
-
-.subtitle {
-  margin: 5px 0 20px 0;
-  font-size: 14px;
-  color: #94a3b8;
-}
-
-.search-wrapper {
-  position: relative;
-  margin-bottom: 25px;
-}
-
-.search-wrapper input {
-  width: 100%;
-  height: 56px;
-  border-radius: 30px;
-  border: 2px solid #38bdf8;
-  padding: 0 60px 0 22px;
-  font-size: 16px;
-  background: #0f172a;
-  color: #e5e7eb;
-}
-
-.search-icon-btn {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: #38bdf8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.search-icon-btn svg {
-  width: 18px;
-  height: 18px;
-  fill: #020617;
-}
-
-.button-row {
-  display: flex;
-  gap: 14px;
-  margin-bottom: 15px;
-}
-
-.button-row button {
-  flex: 1;
-  padding: 13px;
-  border-radius: 14px;
-  border: none;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  background: #38bdf8;
-  color: #020617;
-}
-
-.notification {
-  display: none;
-  padding: 10px;
-  border-radius: 10px;
-  font-size: 14px;
-  margin-bottom: 15px;
-}
-
-.success { background: #38bdf8; color: #020617; }
-.error { background: #b23a48; color: white; }
-
-.book-card {
-  background: #0f172a;
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 12px;
-  border: 2px solid #1e3a5f;
-  text-align: left;
-}
-
-.book-title { font-weight: 600; }
-.book-meta { font-size: 13px; color: #94a3b8; }
-
-footer {
-  text-align: center;
-  padding: 20px;
-  font-size: 13px;
-  background-color: #020617;
-  opacity: 0.8;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <h1>CupX Corporation</h1>
-  <a href="https://cupx.in" class="home-btn">← Back to Home</a>
-</header>
-
-<main>
-<div class="container">
-
-<div class="header">
-  <svg viewBox="0 0 24 24">
-    <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
-  </svg>
-  <h1 class="portal-title">KMCLU Library Portal</h1>
-  <div class="subtitle">Search Academic Books</div>
-</div>
-
-<div class="search-wrapper">
-  <input type="text" id="searchBox"
-    placeholder="Search by title..."
-    onkeypress="if(event.key==='Enter') searchBook()">
-  <div class="search-icon-btn" onclick="searchBook()">
-    <svg viewBox="0 0 24 24">
-      <path d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 109.5 16a6.5 6.5 0 004.2-1.6l.3.3L20 21.5 21.5 20z"/>
-    </svg>
-  </div>
-</div>
-
-<div class="button-row">
-  <button onclick="exportExcel()">Export Excel</button>
-  <button onclick="exportPDF()">Export PDF</button>
-</div>
-
-<div id="notification" class="notification"></div>
-<div id="results"></div>
-
-</div>
-</main>
-
-<footer>
-© 2026 CupX Corporation · All rights reserved
-</footer>
-
-<script>
-let currentResults = [];
-
-async function searchBook() {
-  const query = document.getElementById("searchBox").value.trim().toLowerCase();
-  const notification = document.getElementById("notification");
-  const resultsDiv = document.getElementById("results");
-
-  notification.style.display = "block";
-  notification.className = "notification success";
-  notification.innerText = "Searching...";
-  resultsDiv.innerHTML = "";
-
-  if (!query) {
-    notification.className = "notification error";
-    notification.innerText = "Please enter a search term.";
-    return;
-  }
-
-  const response = await fetch("https://library-back1.onrender.com/books");
-  const books = await response.json();
-
-  currentResults = books.filter(book =>
-    book.title.toLowerCase().includes(query)
-  );
-
-  if (currentResults.length === 0) {
-    notification.className = "notification error";
-    notification.innerText = "No books found.";
-    return;
-  }
-
-  notification.innerText = currentResults.length + " result(s) found.";
-
-  resultsDiv.innerHTML = currentResults.map(book => `
-    <div class="book-card">
-      <div class="book-title">${book.title}</div>
-      <div class="book-meta">Language: ${book.language || "-"}</div>
-      <div class="book-meta">Material: ${book.material || "-"}</div>
-    </div>
-  `).join("");
-}
-
+/* ---------- Excel Export (A1:D2 banner) ---------- */
 function exportExcel() {
   if (currentResults.length === 0) return alert("No data to export.");
 
@@ -551,7 +280,7 @@ function exportExcel() {
 
   const data = [
     ["KMCLU Library Search Portal by CupX"],
-    [],
+    ["", "", "", ""],
     ["Sr. No", "Title", "Language", "Material"]
   ];
 
@@ -566,83 +295,56 @@ function exportExcel() {
 
   const ws = XLSX.utils.aoa_to_sheet(data);
 
-  ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }];
-  ws["!cols"] = [
-    { wch: 8 },
-    { wch: 40 },
-    { wch: 15 },
-    { wch: 20 }
-  ];
+  ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 1, c: 3 } }];
+  ws["!cols"] = [{ wch:8 },{ wch:45 },{ wch:15 },{ wch:22 }];
+  ws["!rows"] = [{ hpt:35 },{ hpt:20 }];
+
+  ws["A1"].s = {
+    font:{ sz:20, bold:true, color:{ rgb:"FFFFFF" }},
+    alignment:{ horizontal:"center", vertical:"center" },
+    fill:{ fgColor:{ rgb:"305496" }}
+  };
+
+  ["A3","B3","C3","D3"].forEach(c=>{
+    ws[c].s={
+      font:{ bold:true, color:{ rgb:"FFFFFF" }},
+      alignment:{ horizontal:"center" },
+      fill:{ fgColor:{ rgb:"305496" }}
+    };
+  });
 
   XLSX.utils.book_append_sheet(wb, ws, "Library Data");
-  XLSX.writeFile(wb, "KMCLU_Library_Report.xlsx");
+  XLSX.writeFile(wb, "KMCLU_Library_Report.xlsx", { cellStyles:true });
 }
 
+/* ---------- PDF Export ---------- */
 function exportPDF() {
   if (currentResults.length === 0) return alert("No data to export.");
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF("p", "mm", "a4");
+  const doc = new jsPDF("p","mm","a4");
 
-  const rows = currentResults.map((book, index) => [
-    index + 1,
-    book.title || "",
-    book.language || "",
-    book.material || ""
+  const rows = currentResults.map((book,i)=>[
+    i+1,
+    book.title||"",
+    book.language||"",
+    book.material||""
   ]);
 
   doc.autoTable({
-    head: [["Sr. No", "Title", "Language", "Material"]],
-    body: rows,
-    startY: 25,
-    margin: { left: 10, right: 10 },
-    styles: { fontSize: 9 },
-    didDrawPage: function () {
-      doc.setFontSize(16);
-      doc.text("KMCLU Library Search Portal by CupX", 105, 15, { align: "center" });
+    head:[["Sr. No","Title","Language","Material"]],
+    body:rows,
+    startY:30,
+    styles:{ fontSize:9 },
+    didDrawPage:function(){
+      doc.setFontSize(22);
+      doc.setFont(undefined,"bold");
+      doc.text("KMCLU Library Search Portal by CupX",105,18,{align:"center"});
     }
   });
 
   doc.save("KMCLU_Library_Report.pdf");
 }
-</script>
-
-</body>
-</html>
-
-
-function exportPDF() {
-  if (currentResults.length === 0) return alert("No data to export.");
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF("p", "mm", "a4");
-
-  const rows = currentResults.map((book, index) => [
-    index + 1,
-    book.title || "",
-    book.language || "",
-    book.material || ""
-  ]);
-
-  doc.autoTable({
-    head: [["Sr. No", "Title", "Language", "Material"]],
-    body: rows,
-    startY: 30,
-    margin: { left: 10, right: 10 },
-    styles: { fontSize: 9 },
-    headStyles: {
-      fillColor: [48, 84, 150],
-      textColor: 255
-    },
-    didDrawPage: function () {
-      doc.setFontSize(20);   // Larger heading
-      doc.setFont(undefined, "bold");
-      doc.text("KMCLU Library Search Portal by CupX", 105, 18, { align: "center" });
-    }
-  });
-
-  doc.save("cupx-kmclulib.pdf");
-    }
 </script>
 
 </body>
