@@ -309,30 +309,33 @@ function exportExcel() {
 }
 
 /* ---------- PDF Export ---------- */
-function exportPDF() {
-  if (currentResults.length === 0) return alert("No data to export.");
+function exportPDF(){
+if(currentResults.length===0)return alert("No data to export.");
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF("p","mm","a4");
+const {jsPDF}=window.jspdf;
+const doc=new jsPDF("p","mm","a4");
 
-  doc.setFontSize(24);
-  doc.setFont(undefined,"bold");
-  doc.text("KMCLU Library Search Portal by CupX",105,18,{align:"center"});
+const rows=currentResults.map((b,i)=>[
+i+1,b.title||"",b.language||"",b.material||""
+]);
 
-  const rows=currentResults.map((b,i)=>[
-    i+1,b.title||"",b.language||"",b.material||""
-  ]);
+doc.autoTable({
+head:[["Sr. No","Title","Language","Material"]],
+body:rows,
+margin:{top:35},
+styles:{fontSize:9},
+headStyles:{fillColor:[48,84,150],textColor:255},
 
-  doc.autoTable({
-    head:[["Sr. No","Title","Language","Material"]],
-    body:rows,
-    startY:30,
-    styles:{fontSize:9},
-    headStyles:{fillColor:[48,84,150],textColor:255}
-  });
-
-  doc.save("cupx-kmclulib.pdf");
+didDrawPage:function(data){
+doc.setFontSize(20);
+doc.setFont(undefined,"bold");
+doc.text("KMCLU Library Search Portal by CupX",105,20,{align:"center"});
+doc.setFont(undefined,"normal");
 }
+});
+
+doc.save("cupx-kmclulib.pdf");
+      }
 </script>
 
 </body>
