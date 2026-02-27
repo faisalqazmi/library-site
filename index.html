@@ -14,7 +14,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
 <!-- Excel (STYLE SUPPORTED BUILD) -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.13/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
 * { box-sizing: border-box; }
@@ -265,64 +265,32 @@ async function searchBook() {
 
 /* ---------- Excel Export ---------- */
 function exportExcel() {
-  if (currentResults.length === 0)
-    return alert("No data to export.");
+  if (currentResults.length === 0) return alert("No data to export.");
 
   const wb = XLSX.utils.book_new();
 
   const data = [
     ["KMCLU Library Search Portal by CupX", "", "", ""],
-    ["Sr. No", "Title", "Language", "Material"]
-  ];
-
-  currentResults.forEach((book, i) => {
-    data.push([
+    ["Sr. No", "Title", "Language", "Material"],
+    ...currentResults.map((book, i) => [
       i + 1,
       book.title || "",
       book.language || "",
       book.material || ""
-    ]);
-  });
+    ])
+  ];
 
   const ws = XLSX.utils.aoa_to_sheet(data);
 
-  // Merge A1:D1
-  ws["!merges"] = [{
-    s: { r: 0, c: 0 },
-    e: { r: 0, c: 3 }
-  }];
+  // Merge A1:D1 for title row
+  ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }];
 
   // Column widths
-  ws["!cols"] = [
-    { wch: 8 },
-    { wch: 45 },
-    { wch: 15 },
-    { wch: 22 }
-  ];
-
-  // Row height for header
-  ws["!rows"] = [{ hpt: 40 }];
-
-  // Title styling
-  ws["A1"].s = {
-    font: { bold: true, sz: 20 },
-    alignment: { horizontal: "center", vertical: "center" }
-  };
-
-  // Header row styling (A2:D2)
-  ["A2", "B2", "C2", "D2"].forEach(cell => {
-    if (!ws[cell]) return;
-    ws[cell].s = {
-      font: { bold: true },
-      alignment: { horizontal: "center" }
-    };
-  });
+  ws["!cols"] = [{ wch: 8 }, { wch: 45 }, { wch: 15 }, { wch: 22 }];
 
   XLSX.utils.book_append_sheet(wb, ws, "Library Data");
-
-  // Important: use writeFile directly for xlsx-style
   XLSX.writeFile(wb, "cupx-kmclulib.xlsx");
-  }
+}
 
 /* ---------- PDF Export ---------- */
 function exportPDF(){
