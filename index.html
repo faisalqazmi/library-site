@@ -265,47 +265,65 @@ async function searchBook() {
 
 /* ---------- Excel Export ---------- */
 function exportExcel() {
-  if (currentResults.length === 0) return alert("No data to export.");
+  if (currentResults.length === 0) 
+    return alert("No data to export.");
 
   const wb = XLSX.utils.book_new();
 
   const data = [
-    ["KMCLU Library Search Portal by CupX","","",""],
-    ["","","",""],
-    ["Sr. No","Title","Language","Material"]
+    ["KMCLU Library Search Portal by CupX", "", "", ""],
+    ["Sr. No", "Title", "Language", "Material"]
   ];
 
-  currentResults.forEach((book,i)=>{
+  currentResults.forEach((book, i) => {
     data.push([
-      i+1,
-      book.title||"",
-      book.language||"",
-      book.material||""
+      i + 1,
+      book.title || "",
+      book.language || "",
+      book.material || ""
     ]);
   });
 
   const ws = XLSX.utils.aoa_to_sheet(data);
 
-  ws["!merges"]=[{s:{r:0,c:0},e:{r:1,c:3}}];
-  ws["!cols"]=[{wch:8},{wch:45},{wch:15},{wch:22}];
-  ws["!rows"]=[{hpt:40},{hpt:25}];
+  // Merge A1:D1
+  ws["!merges"] = [{
+    s: { r: 0, c: 0 },
+    e: { r: 0, c: 3 }
+  }];
 
-  ws["A1"].s={
-    font:{sz:22,bold:true,color:{rgb:"FFFFFF"}},
-    alignment:{horizontal:"center",vertical:"center"},
-    fill:{patternType:"solid",fgColor:{rgb:"305496"}}
+  // Column widths
+  ws["!cols"] = [
+    { wch: 8 },
+    { wch: 45 },
+    { wch: 15 },
+    { wch: 22 }
+  ];
+
+  // Increase row height for header
+  ws["!rows"] = [{ hpt: 35 }];
+
+  // Header styling (works in browser build)
+  ws["A1"].s = {
+    font: { bold: true, sz: 18 },
+    alignment: { horizontal: "center", vertical: "center" }
   };
 
-  ["A3","B3","C3","D3"].forEach(c=>{
-    ws[c].s={
-      font:{bold:true,color:{rgb:"FFFFFF"}},
-      alignment:{horizontal:"center"},
-      fill:{patternType:"solid",fgColor:{rgb:"305496"}}
-    };
+  XLSX.utils.book_append_sheet(wb, ws, "Library Data");
+
+  const wbout = XLSX.write(wb, {
+    bookType: "xlsx",
+    type: "array"
   });
 
-  XLSX.utils.book_append_sheet(wb,ws,"Library Data");
-  XLSX.writeFile(wb,"cupx-kmclulib.xlsx");
+  const blob = new Blob([wbout], {
+    type: "application/octet-stream"
+  });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "cupx-kmclulib.xlsx";
+  link.click();
 }
 
 /* ---------- PDF Export ---------- */
